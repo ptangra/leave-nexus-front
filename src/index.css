@@ -2,39 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Corporate Vacation Management Design System */
 
 @layer base {
   :root {
+    /* Base colors */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 222 15% 20%;
 
+    /* Card system */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 222 15% 20%;
+    --card-header: 220 15% 96%;
 
+    /* Popover system */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 222 15% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary brand colors - Professional blue */
+    --primary: 213 94% 68%;
+    --primary-hover: 213 94% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-soft: 213 100% 95%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary colors - Neutral gray */
+    --secondary: 220 15% 96%;
+    --secondary-hover: 220 15% 90%;
+    --secondary-foreground: 222 15% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted colors */
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent colors - Corporate teal */
+    --accent: 180 84% 60%;
+    --accent-hover: 180 84% 50%;
+    --accent-foreground: 0 0% 100%;
+    --accent-soft: 180 100% 95%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Status colors */
+    --success: 142 76% 45%;
+    --success-foreground: 0 0% 100%;
+    --success-soft: 142 70% 95%;
+    
+    --warning: 45 93% 65%;
+    --warning-foreground: 0 0% 100%;
+    --warning-soft: 45 100% 95%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-soft: 0 100% 95%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Vacation type colors */
+    --vacation-annual: 213 94% 68%;
+    --vacation-sick: 0 84% 60%;
+    --vacation-personal: 180 84% 60%;
+    --vacation-maternity: 280 84% 70%;
+    --vacation-emergency: 25 95% 63%;
+
+    /* Border and input */
+    --border: 220 15% 85%;
+    --input: 220 15% 85%;
+    --ring: 213 94% 68%;
 
     --radius: 0.5rem;
 
