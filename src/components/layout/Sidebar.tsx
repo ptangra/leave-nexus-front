@@ -45,19 +45,19 @@ export function Sidebar() {
 
       {/* User info */}
       <div className="p-4 border-b border-border">
-        <div className="flex items-center space-x-3">
+        <NavLink to="/profile" className="flex items-center space-x-3 hover:bg-muted/50 rounded-lg p-2 transition-colors">
           <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-medium">
             {currentUser.avatar}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-foreground truncate">
-              {currentUser.name}
+              {currentUser.name} {currentUser.last_name}
             </p>
             <p className="text-xs text-muted-foreground truncate">
               {currentUser.department}
             </p>
           </div>
-        </div>
+        </NavLink>
       </div>
 
       {/* Navigation */}
@@ -82,7 +82,7 @@ export function Sidebar() {
         })}
 
         {/* Admin section */}
-        {(currentUser.role === 'admin' || currentUser.role === 'manager') && (
+        {(currentUser.role === 'ADMIN' || currentUser.role === 'ACCOUNT_ADMIN') && (
           <>
             <div className="pt-4 pb-2">
               <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">

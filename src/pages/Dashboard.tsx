@@ -7,7 +7,7 @@ import { currentUser, leaveRequests, upcomingAbsences } from "@/lib/data";
 import { Link } from "react-router-dom";
 
 export default function Dashboard() {
-  const userRequests = leaveRequests.filter(req => req.userId === currentUser.id);
+  const userRequests = leaveRequests.filter(req => req.userId === currentUser.user_id.toString());
   const pendingRequests = userRequests.filter(req => req.status === 'pending');
   const remainingLeave = currentUser.totalLeave - currentUser.usedLeave;
 
@@ -16,7 +16,7 @@ export default function Dashboard() {
       {/* Welcome section */}
       <div>
         <h1 className="text-3xl font-bold text-foreground">
-          Welcome back, {currentUser.name.split(' ')[0]}!
+          Welcome back, {currentUser.name}!
         </h1>
         <p className="text-muted-foreground mt-1">
           Here's an overview of your vacation status and team updates.

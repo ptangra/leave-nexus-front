@@ -2,11 +2,13 @@
 // In a real application, this would come from API calls
 
 export interface User {
-  id: string;
+  user_id: number;
   name: string;
+  last_name: string;
   email: string;
-  role: 'employee' | 'manager' | 'admin';
+  role: 'USER' | 'ACCOUNT_ADMIN' | 'ADMIN';
   department: string;
+  account_id: number;
   avatar?: string;
   totalLeave: number;
   usedLeave: number;
@@ -39,11 +41,13 @@ export interface Notification {
 
 // Current user (would come from authentication)
 export const currentUser: User = {
-  id: '1',
-  name: 'Sarah Johnson',
+  user_id: 1,
+  name: 'Sarah',
+  last_name: 'Johnson',
   email: 'sarah.johnson@company.com',
-  role: 'employee',
+  role: 'USER',
   department: 'Marketing',
+  account_id: 1,
   avatar: 'SJ',
   totalLeave: 25,
   usedLeave: 12
@@ -53,31 +57,37 @@ export const currentUser: User = {
 export const users: User[] = [
   currentUser,
   {
-    id: '2',
-    name: 'Michael Chen',
+    user_id: 2,
+    name: 'Michael',
+    last_name: 'Chen',
     email: 'michael.chen@company.com',
-    role: 'manager',
+    role: 'ACCOUNT_ADMIN',
     department: 'Engineering',
+    account_id: 1,
     avatar: 'MC',
     totalLeave: 25,
     usedLeave: 8
   },
   {
-    id: '3',
-    name: 'Emily Rodriguez',
+    user_id: 3,
+    name: 'Emily',
+    last_name: 'Rodriguez',
     email: 'emily.rodriguez@company.com',
-    role: 'employee',
+    role: 'USER',
     department: 'Marketing',
+    account_id: 1,
     avatar: 'ER',
     totalLeave: 22,
     usedLeave: 15
   },
   {
-    id: '4',
-    name: 'David Thompson',
+    user_id: 4,
+    name: 'David',
+    last_name: 'Thompson',
     email: 'david.thompson@company.com',
-    role: 'admin',
+    role: 'ADMIN',
     department: 'HR',
+    account_id: 1,
     avatar: 'DT',
     totalLeave: 25,
     usedLeave: 5

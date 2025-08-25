@@ -14,7 +14,7 @@ export default function Requests() {
   const [filterType, setFilterType] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const userRequests = leaveRequests.filter(req => req.userId === currentUser.id);
+  const userRequests = leaveRequests.filter(req => req.userId === currentUser.user_id.toString());
 
   const filteredRequests = userRequests.filter(request => {
     const matchesStatus = filterStatus === 'all' || request.status === filterStatus;
