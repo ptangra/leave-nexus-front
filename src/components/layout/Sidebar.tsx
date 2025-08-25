@@ -38,7 +38,9 @@ export function Sidebar() {
     <div className="flex h-full w-64 flex-col bg-card border-r border-border">
       {/* Logo/Brand */}
       <div className="flex h-16 items-center px-6 border-b border-border">
-        <h1 className="text-xl font-bold text-foreground">VacationPro</h1>
+        <NavLink to="/" className="text-xl font-bold text-foreground hover:text-primary transition-colors">
+          VacationPro
+        </NavLink>
       </div>
 
       {/* User info */}
