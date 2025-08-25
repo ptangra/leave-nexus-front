@@ -10,6 +10,7 @@ import NewRequest from "./pages/NewRequest";
 import Calendar from "./pages/Calendar";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
+import AccountAdmin from "./pages/AccountAdmin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="requests" element={<Requests />} />
             <Route path="requests/new" element={<NewRequest />} />
             <Route path="calendar" element={<Calendar />} />
+            <Route path="admin/users" element={<AccountAdmin />} />
             <Route path="profile" element={<Profile />} />
           </Route>
           <Route path="*" element={<NotFound />} />
