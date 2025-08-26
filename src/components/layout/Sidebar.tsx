@@ -7,7 +7,8 @@ import {
   Settings, 
   Bell,
   LogOut,
-  PlusCircle
+  PlusCircle,
+  Shield
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,10 @@ const navigation = [
 const adminNavigation = [
   { name: 'Team Management', href: '/admin/users', icon: Users },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
+];
+
+const superAdminNavigation = [
+  { name: 'Super Admin', href: '/super-admin', icon: Shield },
 ];
 
 export function Sidebar() {
@@ -100,6 +105,35 @@ export function Sidebar() {
                     isActive
                       ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  )}
+                >
+                  <item.icon className="mr-3 h-5 w-5" />
+                  {item.name}
+                </NavLink>
+              );
+            })}
+          </>
+        )}
+
+        {/* Super Admin section */}
+        {currentUser.role === 'ADMIN' && (
+          <>
+            <div className="pt-4 pb-2">
+              <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                System
+              </h3>
+            </div>
+            {superAdminNavigation.map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <NavLink
+                  key={item.name}
+                  to={item.href}
+                  className={cn(
+                    "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                    isActive
+                      ? "bg-destructive text-destructive-foreground"
+                      : "text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                   )}
                 >
                   <item.icon className="mr-3 h-5 w-5" />
