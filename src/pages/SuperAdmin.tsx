@@ -34,53 +34,66 @@ export default function SuperAdmin() {
   // Mock data - Replace with actual API calls
   const mockAccounts = [
     {
-      account_id: 1,
-      company_name: "Tech Corp",
-      users_count: 50,
-      billing_address: "123 Tech St, San Francisco, CA",
-      subscription_type: "PAID",
-      price_by_user: 25.00,
-      subscription_fee: 1250.00
+      id: 1,
+      companyName: "Tech Corp",
+      usersCount: 50,
+      billingAddress: "123 Tech St, San Francisco, CA",
+      subscriptionType: "PAID",
+      users: [
+        {
+          id: "1",
+          firstName: "John",
+          lastName: "Doe",
+          email: "john.doe@techcorp.com",
+          userRole: "ADMIN",
+          accountId: 1,
+          department: "IT"
+        },
+        {
+          id: "2",
+          firstName: "Jane",
+          lastName: "Smith",
+          email: "jane.smith@techcorp.com",
+          userRole: "ACCOUNT_ADMIN",
+          accountId: 1,
+          department: "HR"
+        }
+      ],
+      departments: [
+        { id: 1, departmentName: "Human Resources" },
+        { id: 2, departmentName: "Information Technology" },
+        { id: 3, departmentName: "Finance" }
+      ]
     },
     {
-      account_id: 2,
-      company_name: "StartupXYZ",
-      users_count: 15,
-      billing_address: "456 Innovation Ave, Austin, TX",
-      subscription_type: "FREE",
-      price_by_user: 0.00,
-      subscription_fee: 0.00
+      id: 2,
+      companyName: "StartupXYZ",
+      usersCount: 15,
+      billingAddress: "456 Innovation Ave, Austin, TX",
+      subscriptionType: "FREE",
+      users: [
+        {
+          id: "3",
+          firstName: "Bob",
+          lastName: "Johnson",
+          email: "bob.johnson@startupxyz.com",
+          userRole: "USER",
+          accountId: 2,
+          department: "Marketing"
+        }
+      ],
+      departments: [
+        { id: 4, departmentName: "Marketing" },
+        { id: 5, departmentName: "Sales" }
+      ]
     }
   ];
 
-  const mockUsers = [
-    {
-      user_id: 1,
-      name: "John",
-      last_name: "Doe",
-      email: "john.doe@techcorp.com",
-      role: "ADMIN",
-      account_id: 1,
-      department: "IT"
-    },
-    {
-      user_id: 2,
-      name: "Jane",
-      last_name: "Smith",
-      email: "jane.smith@techcorp.com",
-      role: "ACCOUNT_ADMIN",
-      account_id: 1,
-      department: "HR"
-    }
-  ];
-
-  const mockDepartments = [
-    { id: 1, department_name: "Human Resources", account_id: 1 },
-    { id: 2, department_name: "Information Technology", account_id: 1 },
-    { id: 3, department_name: "Finance", account_id: 1 },
-    { id: 4, department_name: "Marketing", account_id: 2 },
-    { id: 5, department_name: "Sales", account_id: 2 }
-  ];
+  // Flatten users and departments for easier access
+  const allUsers = mockAccounts.flatMap(account => account.users);
+  const allDepartments = mockAccounts.flatMap(account => 
+    account.departments.map(dept => ({ ...dept, accountId: account.id, companyName: account.companyName }))
+  );
 
   const mockPendingRequests = [
     {
@@ -148,7 +161,7 @@ export default function SuperAdmin() {
           <CardContent>
             <div className="text-2xl font-bold">{mockAccounts.length}</div>
             <p className="text-xs text-muted-foreground">
-              {mockAccounts.filter(a => a.subscription_type === 'PAID').length} paid subscriptions
+              {mockAccounts.filter(a => a.subscriptionType === 'PAID').length} paid subscriptions
             </p>
           </CardContent>
         </Card>
@@ -159,9 +172,9 @@ export default function SuperAdmin() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockUsers.length}</div>
+            <div className="text-2xl font-bold">{allUsers.length}</div>
             <p className="text-xs text-muted-foreground">
-              {mockUsers.filter(u => u.role === 'ADMIN').length} system admins
+              {allUsers.filter(u => u.userRole === 'ADMIN').length} system admins
             </p>
           </CardContent>
         </Card>
@@ -266,10 +279,6 @@ export default function SuperAdmin() {
                             </SelectContent>
                           </Select>
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="price_by_user" className="text-right">Price per User</Label>
-                          <Input id="price_by_user" type="number" step="0.01" className="col-span-3" />
-                        </div>
                       </div>
                       <Button onClick={() => handleAccountAction('create')}>Create Account</Button>
                     </DialogContent>
@@ -284,35 +293,35 @@ export default function SuperAdmin() {
                     <TableHead>Company Name</TableHead>
                     <TableHead>Users Count</TableHead>
                     <TableHead>Subscription</TableHead>
-                    <TableHead>Monthly Fee</TableHead>
+                    <TableHead>Billing Address</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {mockAccounts.map((account) => (
-                    <TableRow key={account.account_id}>
-                      <TableCell>{account.account_id}</TableCell>
-                      <TableCell className="font-medium">{account.company_name}</TableCell>
-                      <TableCell>{account.users_count}</TableCell>
+                    <TableRow key={account.id}>
+                      <TableCell>{account.id}</TableCell>
+                      <TableCell className="font-medium">{account.companyName}</TableCell>
+                      <TableCell>{account.usersCount}</TableCell>
                       <TableCell>
-                        <Badge variant={account.subscription_type === 'PAID' ? 'default' : 'secondary'}>
-                          {account.subscription_type}
+                        <Badge variant={account.subscriptionType === 'PAID' ? 'default' : 'secondary'}>
+                          {account.subscriptionType}
                         </Badge>
                       </TableCell>
-                      <TableCell>${account.subscription_fee.toFixed(2)}</TableCell>
+                      <TableCell className="max-w-xs truncate">{account.billingAddress}</TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-2">
                           <Button 
                             variant="outline" 
                             size="sm"
-                            onClick={() => handleAccountAction('edit', account.account_id)}
+                            onClick={() => handleAccountAction('edit', account.id)}
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
                           <Button 
                             variant="destructive" 
                             size="sm"
-                            onClick={() => handleAccountAction('delete', account.account_id)}
+                            onClick={() => handleAccountAction('delete', account.id)}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -370,31 +379,31 @@ export default function SuperAdmin() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockUsers.map((user) => (
-                    <TableRow key={user.user_id}>
-                      <TableCell>{user.user_id}</TableCell>
-                      <TableCell className="font-medium">{user.name} {user.last_name}</TableCell>
+                  {allUsers.map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell>{user.id}</TableCell>
+                      <TableCell className="font-medium">{user.firstName} {user.lastName}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>
-                        <Badge variant={user.role === 'ADMIN' ? 'destructive' : user.role === 'ACCOUNT_ADMIN' ? 'default' : 'secondary'}>
-                          {user.role}
+                        <Badge variant={user.userRole === 'ADMIN' ? 'destructive' : user.userRole === 'ACCOUNT_ADMIN' ? 'default' : 'secondary'}>
+                          {user.userRole}
                         </Badge>
                       </TableCell>
-                      <TableCell>{user.account_id}</TableCell>
+                      <TableCell>{user.accountId}</TableCell>
                       <TableCell>{user.department}</TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-2">
                           <Button 
                             variant="outline" 
                             size="sm"
-                            onClick={() => handleUserAction('edit', user.user_id)}
+                            onClick={() => handleUserAction('edit', parseInt(user.id))}
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
                           <Button 
                             variant="destructive" 
                             size="sm"
-                            onClick={() => handleUserAction('delete', user.user_id)}
+                            onClick={() => handleUserAction('delete', parseInt(user.id))}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -419,8 +428,8 @@ export default function SuperAdmin() {
                     <SelectContent>
                       <SelectItem value="all">All Accounts</SelectItem>
                       {mockAccounts.map((account) => (
-                        <SelectItem key={account.account_id} value={account.account_id.toString()}>
-                          {account.company_name}
+                        <SelectItem key={account.id} value={account.id.toString()}>
+                          {account.companyName}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -458,8 +467,8 @@ export default function SuperAdmin() {
                             </SelectTrigger>
                             <SelectContent>
                               {mockAccounts.map((account) => (
-                                <SelectItem key={account.account_id} value={account.account_id.toString()}>
-                                  {account.company_name}
+                                <SelectItem key={account.id} value={account.id.toString()}>
+                                  {account.companyName}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -483,15 +492,13 @@ export default function SuperAdmin() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockDepartments.map((dept) => {
-                    const account = mockAccounts.find(acc => acc.account_id === dept.account_id);
-                    return (
-                      <TableRow key={dept.id}>
-                        <TableCell>{dept.id}</TableCell>
-                        <TableCell className="font-medium">{dept.department_name}</TableCell>
-                        <TableCell>{dept.account_id}</TableCell>
-                        <TableCell>{account?.company_name || 'Unknown'}</TableCell>
-                        <TableCell>
+                  {allDepartments.map((dept) => (
+                    <TableRow key={dept.id}>
+                      <TableCell>{dept.id}</TableCell>
+                      <TableCell className="font-medium">{dept.departmentName}</TableCell>
+                      <TableCell>{dept.accountId}</TableCell>
+                      <TableCell>{dept.companyName}</TableCell>
+                      <TableCell>
                           <div className="flex items-center space-x-2">
                             <Button 
                               variant="outline" 
@@ -508,10 +515,9 @@ export default function SuperAdmin() {
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TabsContent>
