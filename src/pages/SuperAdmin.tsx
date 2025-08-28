@@ -75,10 +75,11 @@ export default function SuperAdmin() {
   ];
 
   const mockDepartments = [
-    { id: 1, department_name: "Human Resources" },
-    { id: 2, department_name: "Information Technology" },
-    { id: 3, department_name: "Finance" },
-    { id: 4, department_name: "Marketing" }
+    { id: 1, department_name: "Human Resources", account_id: 1 },
+    { id: 2, department_name: "Information Technology", account_id: 1 },
+    { id: 3, department_name: "Finance", account_id: 1 },
+    { id: 4, department_name: "Marketing", account_id: 2 },
+    { id: 5, department_name: "Sales", account_id: 2 }
   ];
 
   const mockPendingRequests = [
@@ -411,11 +412,64 @@ export default function SuperAdmin() {
                 <div className="flex items-center space-x-2">
                   <Search className="h-4 w-4 text-muted-foreground" />
                   <Input placeholder="Search departments..." className="w-64" />
+                  <Select>
+                    <SelectTrigger className="w-48">
+                      <SelectValue placeholder="Filter by Account" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Accounts</SelectItem>
+                      {mockAccounts.map((account) => (
+                        <SelectItem key={account.account_id} value={account.account_id.toString()}>
+                          {account.company_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-                <Button size="sm" onClick={() => handleDepartmentAction('create')}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Department
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Button onClick={() => exportData('departments')} variant="outline" size="sm">
+                    <Download className="h-4 w-4 mr-2" />
+                    Export
+                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Department
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Create New Department</DialogTitle>
+                        <DialogDescription>
+                          Add a new department to an account
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="department_name" className="text-right">Department Name</Label>
+                          <Input id="department_name" className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="account_select" className="text-right">Account</Label>
+                          <Select>
+                            <SelectTrigger className="col-span-3">
+                              <SelectValue placeholder="Select account" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {mockAccounts.map((account) => (
+                                <SelectItem key={account.account_id} value={account.account_id.toString()}>
+                                  {account.company_name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <Button onClick={() => handleDepartmentAction('create')}>Create Department</Button>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </div>
 
               <Table>
@@ -423,34 +477,41 @@ export default function SuperAdmin() {
                   <TableRow>
                     <TableHead>ID</TableHead>
                     <TableHead>Department Name</TableHead>
+                    <TableHead>Account</TableHead>
+                    <TableHead>Company</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockDepartments.map((dept) => (
-                    <TableRow key={dept.id}>
-                      <TableCell>{dept.id}</TableCell>
-                      <TableCell className="font-medium">{dept.department_name}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => handleDepartmentAction('edit', dept.id)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="destructive" 
-                            size="sm"
-                            onClick={() => handleDepartmentAction('delete', dept.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {mockDepartments.map((dept) => {
+                    const account = mockAccounts.find(acc => acc.account_id === dept.account_id);
+                    return (
+                      <TableRow key={dept.id}>
+                        <TableCell>{dept.id}</TableCell>
+                        <TableCell className="font-medium">{dept.department_name}</TableCell>
+                        <TableCell>{dept.account_id}</TableCell>
+                        <TableCell>{account?.company_name || 'Unknown'}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleDepartmentAction('edit', dept.id)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="destructive" 
+                              size="sm"
+                              onClick={() => handleDepartmentAction('delete', dept.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </TabsContent>
