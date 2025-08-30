@@ -57,6 +57,8 @@ export default function AccountAdmin() {
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
   const [isEditUserOpen, setIsEditUserOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [isAddDepartmentOpen, setIsAddDepartmentOpen] = useState(false);
+  const [newDepartmentName, setNewDepartmentName] = useState("");
   
   const [newUser, setNewUser] = useState({
     name: "",
@@ -158,6 +160,60 @@ export default function AccountAdmin() {
       toast({
         title: "Error",
         description: "Failed to delete user. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleAddDepartment = async () => {
+    if (!newDepartmentName.trim()) return;
+    
+    try {
+      // TODO: Replace with actual API call
+      // await api.createDepartment({ name: newDepartmentName });
+      console.log('Creating department:', newDepartmentName);
+      
+      toast({
+        title: "Department Created",
+        description: `${newDepartmentName} department has been added successfully.`,
+      });
+      
+      setIsAddDepartmentOpen(false);
+      setNewDepartmentName("");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create department. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteDepartment = async (departmentName: string) => {
+    const usersInDepartment = users.filter(user => user.department === departmentName);
+    
+    if (usersInDepartment.length > 0) {
+      toast({
+        title: "Cannot Delete Department",
+        description: `Cannot delete ${departmentName} because it has ${usersInDepartment.length} users assigned to it.`,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      // TODO: Replace with actual API call
+      // await api.deleteDepartment(departmentName);
+      console.log('Deleting department:', departmentName);
+      
+      toast({
+        title: "Department Deleted",
+        description: `${departmentName} department has been removed.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete department. Please try again.",
         variant: "destructive"
       });
     }
@@ -321,6 +377,85 @@ export default function AccountAdmin() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Department Management */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <CardTitle>Department Management</CardTitle>
+          <Dialog open={isAddDepartmentOpen} onOpenChange={setIsAddDepartmentOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Department
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Add New Department</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="department_name">Department Name</Label>
+                  <Input
+                    id="department_name"
+                    value={newDepartmentName}
+                    onChange={(e) => setNewDepartmentName(e.target.value)}
+                    placeholder="Engineering"
+                  />
+                </div>
+                
+                <div className="flex justify-end space-x-2 pt-4">
+                  <Button variant="outline" onClick={() => setIsAddDepartmentOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleAddDepartment}>
+                    Create Department
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {departments.map((dept) => {
+              const userCount = users.filter(user => user.department === dept).length;
+              return (
+                <Card key={dept}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-medium">{dept}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {userCount} user{userCount !== 1 ? 's' : ''}
+                        </p>
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem
+                            onClick={() => handleDeleteDepartment(dept)}
+                            className="text-destructive"
+                            disabled={userCount > 0}
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete Department
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Filters and Search */}
       <Card>
