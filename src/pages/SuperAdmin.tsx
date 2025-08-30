@@ -30,6 +30,20 @@ import {
 export default function SuperAdmin() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTab, setSelectedTab] = useState("accounts");
+  
+  // Edit dialog states
+  const [editAccountDialog, setEditAccountDialog] = useState(false);
+  const [editUserDialog, setEditUserDialog] = useState(false);
+  const [editDepartmentDialog, setEditDepartmentDialog] = useState(false);
+  const [editLeaveTypeDialog, setEditLeaveTypeDialog] = useState(false);
+  const [editLeaveDaysDialog, setEditLeaveDaysDialog] = useState(false);
+  
+  // Selected items for editing
+  const [selectedAccount, setSelectedAccount] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [selectedDepartment, setSelectedDepartment] = useState<any>(null);
+  const [selectedLeaveType, setSelectedLeaveType] = useState<any>(null);
+  const [selectedLeaveDays, setSelectedLeaveDays] = useState<any>(null);
 
   // Mock data - Replace with actual API calls
   const mockAccounts = [
@@ -161,28 +175,68 @@ export default function SuperAdmin() {
 
   // TODO: Replace with actual API calls to your backend
   const handleAccountAction = (action: string, accountId?: number) => {
-    console.log(`${action} account`, accountId);
-    // Add your API call here: await fetch('/api/accounts', { method: action === 'create' ? 'POST' : 'PUT', ... });
+    if (action === 'edit' && accountId) {
+      const account = mockAccounts.find(a => a.id === accountId);
+      if (account) {
+        setSelectedAccount(account);
+        setEditAccountDialog(true);
+      }
+    } else {
+      console.log(`${action} account`, accountId);
+      // Add your API call here: await fetch('/api/accounts', { method: action === 'create' ? 'POST' : 'PUT', ... });
+    }
   };
 
   const handleUserAction = (action: string, userId?: number) => {
-    console.log(`${action} user`, userId);
-    // Add your API call here: await fetch('/api/users', { method: action === 'create' ? 'POST' : 'PUT', ... });
+    if (action === 'edit' && userId) {
+      const user = allUsers.find(u => parseInt(u.id) === userId);
+      if (user) {
+        setSelectedUser(user);
+        setEditUserDialog(true);
+      }
+    } else {
+      console.log(`${action} user`, userId);
+      // Add your API call here: await fetch('/api/users', { method: action === 'create' ? 'POST' : 'PUT', ... });
+    }
   };
 
   const handleDepartmentAction = (action: string, deptId?: number) => {
-    console.log(`${action} department`, deptId);
-    // Add your API call here: await fetch('/api/departments', { method: action === 'create' ? 'POST' : 'PUT', ... });
+    if (action === 'edit' && deptId) {
+      const department = allDepartments.find(d => d.id === deptId);
+      if (department) {
+        setSelectedDepartment(department);
+        setEditDepartmentDialog(true);
+      }
+    } else {
+      console.log(`${action} department`, deptId);
+      // Add your API call here: await fetch('/api/departments', { method: action === 'create' ? 'POST' : 'PUT', ... });
+    }
   };
 
   const handleLeaveTypeAction = (action: string, leaveTypeId?: number) => {
-    console.log(`${action} leave type`, leaveTypeId);
-    // Add your API call here: await fetch('/api/leave-types', { method: action === 'create' ? 'POST' : 'PUT', ... });
+    if (action === 'edit' && leaveTypeId) {
+      const leaveType = mockLeaveTypes.find(lt => lt.id === leaveTypeId);
+      if (leaveType) {
+        setSelectedLeaveType(leaveType);
+        setEditLeaveTypeDialog(true);
+      }
+    } else {
+      console.log(`${action} leave type`, leaveTypeId);
+      // Add your API call here: await fetch('/api/leave-types', { method: action === 'create' ? 'POST' : 'PUT', ... });
+    }
   };
 
   const handleLeaveDaysAction = (action: string, leaveDaysId?: number) => {
-    console.log(`${action} leave days`, leaveDaysId);
-    // Add your API call here: await fetch('/api/leave-days', { method: action === 'create' ? 'POST' : 'PUT', ... });
+    if (action === 'edit' && leaveDaysId) {
+      const leaveDays = mockLeaveDays.find(ld => ld.id === leaveDaysId);
+      if (leaveDays) {
+        setSelectedLeaveDays(leaveDays);
+        setEditLeaveDaysDialog(true);
+      }
+    } else {
+      console.log(`${action} leave days`, leaveDaysId);
+      // Add your API call here: await fetch('/api/leave-days', { method: action === 'create' ? 'POST' : 'PUT', ... });
+    }
   };
 
   const exportData = (dataType: string) => {
@@ -958,6 +1012,306 @@ export default function SuperAdmin() {
           </Tabs>
         </CardContent>
       </Card>
+
+      {/* Edit Account Dialog */}
+      <Dialog open={editAccountDialog} onOpenChange={setEditAccountDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Account</DialogTitle>
+            <DialogDescription>
+              Update account information
+            </DialogDescription>
+          </DialogHeader>
+          {selectedAccount && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_company_name" className="text-right">Company Name</Label>
+                <Input 
+                  id="edit_company_name" 
+                  defaultValue={selectedAccount.companyName}
+                  className="col-span-3" 
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_users_count" className="text-right">Users Count</Label>
+                <Input 
+                  id="edit_users_count" 
+                  type="number" 
+                  defaultValue={selectedAccount.usersCount}
+                  className="col-span-3" 
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_billing_address" className="text-right">Billing Address</Label>
+                <Textarea 
+                  id="edit_billing_address" 
+                  defaultValue={selectedAccount.billingAddress}
+                  className="col-span-3" 
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_subscription_type" className="text-right">Subscription</Label>
+                <Select defaultValue={selectedAccount.subscriptionType}>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Select subscription type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="FREE">Free</SelectItem>
+                    <SelectItem value="PAID">Paid</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+          <Button onClick={() => {
+            console.log('Update account', selectedAccount?.id);
+            setEditAccountDialog(false);
+          }}>
+            Update Account
+          </Button>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit User Dialog */}
+      <Dialog open={editUserDialog} onOpenChange={setEditUserDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit User</DialogTitle>
+            <DialogDescription>
+              Update user information
+            </DialogDescription>
+          </DialogHeader>
+          {selectedUser && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_first_name" className="text-right">First Name</Label>
+                <Input 
+                  id="edit_first_name" 
+                  defaultValue={selectedUser.firstName}
+                  className="col-span-3" 
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_last_name" className="text-right">Last Name</Label>
+                <Input 
+                  id="edit_last_name" 
+                  defaultValue={selectedUser.lastName}
+                  className="col-span-3" 
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_email" className="text-right">Email</Label>
+                <Input 
+                  id="edit_email" 
+                  type="email"
+                  defaultValue={selectedUser.email}
+                  className="col-span-3" 
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_user_role" className="text-right">Role</Label>
+                <Select defaultValue={selectedUser.userRole}>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="USER">User</SelectItem>
+                    <SelectItem value="ACCOUNT_ADMIN">Account Admin</SelectItem>
+                    <SelectItem value="ADMIN">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_department" className="text-right">Department</Label>
+                <Input 
+                  id="edit_department" 
+                  defaultValue={selectedUser.department}
+                  className="col-span-3" 
+                />
+              </div>
+            </div>
+          )}
+          <Button onClick={() => {
+            console.log('Update user', selectedUser?.id);
+            setEditUserDialog(false);
+          }}>
+            Update User
+          </Button>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Department Dialog */}
+      <Dialog open={editDepartmentDialog} onOpenChange={setEditDepartmentDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Department</DialogTitle>
+            <DialogDescription>
+              Update department information
+            </DialogDescription>
+          </DialogHeader>
+          {selectedDepartment && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_department_name" className="text-right">Department Name</Label>
+                <Input 
+                  id="edit_department_name" 
+                  defaultValue={selectedDepartment.departmentName}
+                  className="col-span-3" 
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_account_select" className="text-right">Account</Label>
+                <Select defaultValue={selectedDepartment.accountId?.toString()}>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Select account" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {mockAccounts.map((account) => (
+                      <SelectItem key={account.id} value={account.id.toString()}>
+                        {account.companyName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+          <Button onClick={() => {
+            console.log('Update department', selectedDepartment?.id);
+            setEditDepartmentDialog(false);
+          }}>
+            Update Department
+          </Button>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Leave Type Dialog */}
+      <Dialog open={editLeaveTypeDialog} onOpenChange={setEditLeaveTypeDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Leave Type</DialogTitle>
+            <DialogDescription>
+              Update leave type information
+            </DialogDescription>
+          </DialogHeader>
+          {selectedLeaveType && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_leave_type_name" className="text-right">Type Name</Label>
+                <Input 
+                  id="edit_leave_type_name" 
+                  defaultValue={selectedLeaveType.name}
+                  className="col-span-3" 
+                  placeholder="e.g., Annual Leave"
+                />
+              </div>
+            </div>
+          )}
+          <Button onClick={() => {
+            console.log('Update leave type', selectedLeaveType?.id);
+            setEditLeaveTypeDialog(false);
+          }}>
+            Update Leave Type
+          </Button>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Leave Days Dialog */}
+      <Dialog open={editLeaveDaysDialog} onOpenChange={setEditLeaveDaysDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Leave Days</DialogTitle>
+            <DialogDescription>
+              Update leave days allocation
+            </DialogDescription>
+          </DialogHeader>
+          {selectedLeaveDays && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_user_select" className="text-right">User</Label>
+                <Select defaultValue={selectedLeaveDays.userId}>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Select user" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {allUsers.map((user) => (
+                      <SelectItem key={user.id} value={user.id}>
+                        {user.firstName} {user.lastName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_leave_type_select" className="text-right">Leave Type</Label>
+                <Select defaultValue={selectedLeaveDays.leaveTypeId?.toString()}>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Select leave type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {mockLeaveTypes.map((leaveType) => (
+                      <SelectItem key={leaveType.id} value={leaveType.id.toString()}>
+                        {leaveType.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_available_days" className="text-right">Available Days</Label>
+                <Input 
+                  id="edit_available_days" 
+                  type="number" 
+                  defaultValue={selectedLeaveDays.available}
+                  className="col-span-3" 
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_planned_days" className="text-right">Planned Days</Label>
+                <Input 
+                  id="edit_planned_days" 
+                  type="number" 
+                  defaultValue={selectedLeaveDays.planned}
+                  className="col-span-3" 
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_taken_days" className="text-right">Taken Days</Label>
+                <Input 
+                  id="edit_taken_days" 
+                  type="number" 
+                  defaultValue={selectedLeaveDays.taken}
+                  className="col-span-3" 
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_upcoming_days" className="text-right">Upcoming Days</Label>
+                <Input 
+                  id="edit_upcoming_days" 
+                  type="number" 
+                  defaultValue={selectedLeaveDays.upcoming}
+                  className="col-span-3" 
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit_next_year_planned" className="text-right">Next Year Planned</Label>
+                <Input 
+                  id="edit_next_year_planned" 
+                  type="number" 
+                  defaultValue={selectedLeaveDays.nextYearPlanned}
+                  className="col-span-3" 
+                />
+              </div>
+            </div>
+          )}
+          <Button onClick={() => {
+            console.log('Update leave days', selectedLeaveDays?.id);
+            setEditLeaveDaysDialog(false);
+          }}>
+            Update Leave Days
+          </Button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
