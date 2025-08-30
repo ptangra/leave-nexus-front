@@ -95,6 +95,48 @@ export default function SuperAdmin() {
     account.departments.map(dept => ({ ...dept, accountId: account.id, companyName: account.companyName }))
   );
 
+  // Mock data for new leave structure
+  const mockLeaveTypes = [
+    { id: 1, name: "Annual Leave" },
+    { id: 2, name: "Sick Leave" },
+    { id: 3, name: "Personal Leave" },
+    { id: 4, name: "Maternity/Paternity Leave" },
+    { id: 5, name: "Emergency Leave" }
+  ];
+
+  const mockLeaveDays = [
+    {
+      id: 1,
+      userId: "1",
+      leaveTypeId: 1,
+      available: 25,
+      planned: 5,
+      taken: 8,
+      upcoming: 3,
+      nextYearPlanned: 2
+    },
+    {
+      id: 2,
+      userId: "1",
+      leaveTypeId: 2,
+      available: 10,
+      planned: 0,
+      taken: 2,
+      upcoming: 0,
+      nextYearPlanned: 0
+    },
+    {
+      id: 3,
+      userId: "2",
+      leaveTypeId: 1,
+      available: 20,
+      planned: 7,
+      taken: 5,
+      upcoming: 2,
+      nextYearPlanned: 1
+    }
+  ];
+
   const mockPendingRequests = [
     {
       id: 1,
@@ -131,6 +173,16 @@ export default function SuperAdmin() {
   const handleDepartmentAction = (action: string, deptId?: number) => {
     console.log(`${action} department`, deptId);
     // Add your API call here: await fetch('/api/departments', { method: action === 'create' ? 'POST' : 'PUT', ... });
+  };
+
+  const handleLeaveTypeAction = (action: string, leaveTypeId?: number) => {
+    console.log(`${action} leave type`, leaveTypeId);
+    // Add your API call here: await fetch('/api/leave-types', { method: action === 'create' ? 'POST' : 'PUT', ... });
+  };
+
+  const handleLeaveDaysAction = (action: string, leaveDaysId?: number) => {
+    console.log(`${action} leave days`, leaveDaysId);
+    // Add your API call here: await fetch('/api/leave-days', { method: action === 'create' ? 'POST' : 'PUT', ... });
   };
 
   const exportData = (dataType: string) => {
@@ -212,12 +264,13 @@ export default function SuperAdmin() {
         </CardHeader>
         <CardContent>
           <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-8">
+            <TabsList className="grid w-full grid-cols-9">
               <TabsTrigger value="accounts">Accounts</TabsTrigger>
               <TabsTrigger value="users">Users</TabsTrigger>
               <TabsTrigger value="departments">Departments</TabsTrigger>
               <TabsTrigger value="relationships">Master/Slave</TabsTrigger>
-              <TabsTrigger value="leave">Leave Data</TabsTrigger>
+              <TabsTrigger value="leave-types">Leave Types</TabsTrigger>
+              <TabsTrigger value="leave-days">Leave Days</TabsTrigger>
               <TabsTrigger value="requests">Requests</TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
@@ -538,34 +591,250 @@ export default function SuperAdmin() {
               </div>
             </TabsContent>
 
-            {/* Leave Data Management */}
-            <TabsContent value="leave" className="space-y-4">
-              <div className="text-center py-8">
-                <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold">Leave Data Management</h3>
-                <p className="text-muted-foreground mb-4">
-                  View and manage holidays, sick leave, home office, and special permissions
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-md mx-auto">
-                  <Button variant="outline" onClick={() => console.log('Load holidays data')}>
-                    Holidays
-                  </Button>
-                  <Button variant="outline" onClick={() => console.log('Load sick leave data')}>
-                    Sick Leave
-                  </Button>
-                  <Button variant="outline" onClick={() => console.log('Load home office data')}>
-                    Home Office
-                  </Button>
-                  <Button variant="outline" onClick={() => console.log('Load special permissions data')}>
-                    Special Perms
-                  </Button>
+            {/* Leave Types Management */}
+            <TabsContent value="leave-types" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Search className="h-4 w-4 text-muted-foreground" />
+                  <Input placeholder="Search leave types..." className="w-64" />
                 </div>
-                {/* TODO: Add your API calls here to fetch leave data:
-                    await fetch('/api/holidays')
-                    await fetch('/api/sick-leave')
-                    await fetch('/api/home-office')
-                    await fetch('/api/special-permissions') */}
+                <div className="flex items-center space-x-2">
+                  <Button onClick={() => exportData('leave-types')} variant="outline" size="sm">
+                    <Download className="h-4 w-4 mr-2" />
+                    Export
+                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Leave Type
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Create New Leave Type</DialogTitle>
+                        <DialogDescription>
+                          Add a new type of leave to the system
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="leave_type_name" className="text-right">Type Name</Label>
+                          <Input id="leave_type_name" className="col-span-3" placeholder="e.g., Annual Leave" />
+                        </div>
+                      </div>
+                      <Button onClick={() => handleLeaveTypeAction('create')}>Create Leave Type</Button>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </div>
+
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>ID</TableHead>
+                    <TableHead>Leave Type Name</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {mockLeaveTypes.map((leaveType) => (
+                    <TableRow key={leaveType.id}>
+                      <TableCell>{leaveType.id}</TableCell>
+                      <TableCell className="font-medium">{leaveType.name}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleLeaveTypeAction('edit', leaveType.id)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="destructive" 
+                            size="sm"
+                            onClick={() => handleLeaveTypeAction('delete', leaveType.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              {/* TODO: Add your API call here: await fetch('/api/leave-types') */}
+            </TabsContent>
+
+            {/* Leave Days Management */}
+            <TabsContent value="leave-days" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Search className="h-4 w-4 text-muted-foreground" />
+                  <Input placeholder="Search leave days..." className="w-64" />
+                  <Select>
+                    <SelectTrigger className="w-48">
+                      <SelectValue placeholder="Filter by User" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Users</SelectItem>
+                      {allUsers.map((user) => (
+                        <SelectItem key={user.id} value={user.id}>
+                          {user.firstName} {user.lastName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select>
+                    <SelectTrigger className="w-48">
+                      <SelectValue placeholder="Filter by Leave Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Leave Types</SelectItem>
+                      {mockLeaveTypes.map((leaveType) => (
+                        <SelectItem key={leaveType.id} value={leaveType.id.toString()}>
+                          {leaveType.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Button onClick={() => exportData('leave-days')} variant="outline" size="sm">
+                    <Download className="h-4 w-4 mr-2" />
+                    Export
+                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Leave Days
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Create New Leave Days Record</DialogTitle>
+                        <DialogDescription>
+                          Add leave day allocation for a user
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="user_select" className="text-right">User</Label>
+                          <Select>
+                            <SelectTrigger className="col-span-3">
+                              <SelectValue placeholder="Select user" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {allUsers.map((user) => (
+                                <SelectItem key={user.id} value={user.id}>
+                                  {user.firstName} {user.lastName}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="leave_type_select" className="text-right">Leave Type</Label>
+                          <Select>
+                            <SelectTrigger className="col-span-3">
+                              <SelectValue placeholder="Select leave type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {mockLeaveTypes.map((leaveType) => (
+                                <SelectItem key={leaveType.id} value={leaveType.id.toString()}>
+                                  {leaveType.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="available_days" className="text-right">Available Days</Label>
+                          <Input id="available_days" type="number" className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="planned_days" className="text-right">Planned Days</Label>
+                          <Input id="planned_days" type="number" className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="taken_days" className="text-right">Taken Days</Label>
+                          <Input id="taken_days" type="number" className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="upcoming_days" className="text-right">Upcoming Days</Label>
+                          <Input id="upcoming_days" type="number" className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="next_year_planned" className="text-right">Next Year Planned</Label>
+                          <Input id="next_year_planned" type="number" className="col-span-3" />
+                        </div>
+                      </div>
+                      <Button onClick={() => handleLeaveDaysAction('create')}>Create Leave Days Record</Button>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
+
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>ID</TableHead>
+                    <TableHead>User</TableHead>
+                    <TableHead>Leave Type</TableHead>
+                    <TableHead>Available</TableHead>
+                    <TableHead>Planned</TableHead>
+                    <TableHead>Taken</TableHead>
+                    <TableHead>Upcoming</TableHead>
+                    <TableHead>Next Year Planned</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {mockLeaveDays.map((leaveDays) => {
+                    const user = allUsers.find(u => u.id === leaveDays.userId);
+                    const leaveType = mockLeaveTypes.find(lt => lt.id === leaveDays.leaveTypeId);
+                    return (
+                      <TableRow key={leaveDays.id}>
+                        <TableCell>{leaveDays.id}</TableCell>
+                        <TableCell className="font-medium">
+                          {user ? `${user.firstName} ${user.lastName}` : `User ${leaveDays.userId}`}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">
+                            {leaveType ? leaveType.name : `Type ${leaveDays.leaveTypeId}`}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{leaveDays.available}</TableCell>
+                        <TableCell>{leaveDays.planned}</TableCell>
+                        <TableCell>{leaveDays.taken}</TableCell>
+                        <TableCell>{leaveDays.upcoming}</TableCell>
+                        <TableCell>{leaveDays.nextYearPlanned}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleLeaveDaysAction('edit', leaveDays.id)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="destructive" 
+                              size="sm"
+                              onClick={() => handleLeaveDaysAction('delete', leaveDays.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+              {/* TODO: Add your API call here: await fetch('/api/leave-days') */}
             </TabsContent>
 
             {/* Requests Management */}
