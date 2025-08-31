@@ -9,7 +9,9 @@ import {
   MoreHorizontal,
   UserPlus,
   Shield,
-  Building2
+  Building2,
+  Calendar,
+  CalendarDays
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -46,8 +48,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
-import { users, currentUser, type User } from "@/lib/data";
+import { 
+  users, 
+  currentUser, 
+  holidays, 
+  countries, 
+  nationalHolidays,
+  type User, 
+  type Holiday 
+} from "@/lib/data";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export default function AccountAdmin() {
   const { toast } = useToast();
@@ -59,6 +77,16 @@ export default function AccountAdmin() {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [isAddDepartmentOpen, setIsAddDepartmentOpen] = useState(false);
   const [newDepartmentName, setNewDepartmentName] = useState("");
+  const [isAddHolidayOpen, setIsAddHolidayOpen] = useState(false);
+  const [isAddNationalHolidaysOpen, setIsAddNationalHolidaysOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedNationalHolidays, setSelectedNationalHolidays] = useState<string[]>([]);
+  const [customHoliday, setCustomHoliday] = useState({
+    name: "",
+    date: undefined as Date | undefined,
+    description: "",
+    recurring: false
+  });
   
   const [newUser, setNewUser] = useState({
     name: "",
@@ -216,6 +244,98 @@ export default function AccountAdmin() {
       toast({
         title: "Error",
         description: "Failed to delete department. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleAddCustomHoliday = async () => {
+    if (!customHoliday.name || !customHoliday.date) return;
+    
+    try {
+      // TODO: Replace with actual API call
+      const newHoliday: Holiday = {
+        id: Date.now().toString(),
+        name: customHoliday.name,
+        date: format(customHoliday.date, 'yyyy-MM-dd'),
+        type: 'custom',
+        description: customHoliday.description,
+        recurring: customHoliday.recurring
+      };
+      
+      console.log('Creating custom holiday:', newHoliday);
+      
+      toast({
+        title: "Holiday Added",
+        description: `${customHoliday.name} has been added to the company calendar.`,
+      });
+      
+      setIsAddHolidayOpen(false);
+      setCustomHoliday({
+        name: "",
+        date: undefined,
+        description: "",
+        recurring: false
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add holiday. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleAddNationalHolidays = async () => {
+    if (!selectedCountry || selectedNationalHolidays.length === 0) return;
+    
+    try {
+      const countryHolidays = nationalHolidays[selectedCountry];
+      const newHolidays: Holiday[] = selectedNationalHolidays.map(holidayName => {
+        const holiday = countryHolidays.find(h => h.name === holidayName);
+        return {
+          id: Date.now().toString() + Math.random(),
+          name: holiday!.name,
+          date: `2024-${holiday!.date}`,
+          type: 'national' as const,
+          country: selectedCountry,
+          description: holiday!.description,
+          recurring: true
+        };
+      });
+      
+      console.log('Adding national holidays:', newHolidays);
+      
+      toast({
+        title: "National Holidays Added",
+        description: `${selectedNationalHolidays.length} national holidays have been added to the company calendar.`,
+      });
+      
+      setIsAddNationalHolidaysOpen(false);
+      setSelectedCountry("");
+      setSelectedNationalHolidays([]);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add national holidays. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteHoliday = async (holiday: Holiday) => {
+    try {
+      // TODO: Replace with actual API call
+      console.log('Deleting holiday:', holiday);
+      
+      toast({
+        title: "Holiday Deleted",
+        description: `${holiday.name} has been removed from the company calendar.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete holiday. Please try again.",
         variant: "destructive"
       });
     }
@@ -468,6 +588,223 @@ export default function AccountAdmin() {
                 </Card>
               );
             })}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Holiday Management */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <CardTitle>Company Holiday Calendar</CardTitle>
+          <div className="flex space-x-2">
+            <Dialog open={isAddNationalHolidaysOpen} onOpenChange={setIsAddNationalHolidaysOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Add National Holidays
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Add National Holidays</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="country">Country</Label>
+                    <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a country" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {countries.map((country) => (
+                          <SelectItem key={country.code} value={country.code}>
+                            {country.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {selectedCountry && (
+                    <div className="space-y-2">
+                      <Label>Select Holidays</Label>
+                      <div className="space-y-2 max-h-40 overflow-y-auto">
+                        {nationalHolidays[selectedCountry]?.map((holiday) => (
+                          <div key={holiday.name} className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              id={holiday.name}
+                              checked={selectedNationalHolidays.includes(holiday.name)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedNationalHolidays(prev => [...prev, holiday.name]);
+                                } else {
+                                  setSelectedNationalHolidays(prev => prev.filter(h => h !== holiday.name));
+                                }
+                              }}
+                              className="rounded border-gray-300"
+                            />
+                            <Label htmlFor={holiday.name} className="text-sm flex-1">
+                              {holiday.name} ({holiday.date})
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-end space-x-2 pt-4">
+                    <Button variant="outline" onClick={() => setIsAddNationalHolidaysOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button 
+                      onClick={handleAddNationalHolidays}
+                      disabled={!selectedCountry || selectedNationalHolidays.length === 0}
+                    >
+                      Add Selected Holidays
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+            
+            <Dialog open={isAddHolidayOpen} onOpenChange={setIsAddHolidayOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Custom Holiday
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Add Custom Holiday</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="holiday_name">Holiday Name</Label>
+                    <Input
+                      id="holiday_name"
+                      value={customHoliday.name}
+                      onChange={(e) => setCustomHoliday(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder="Company Foundation Day"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label>Date</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !customHoliday.date && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarDays className="mr-2 h-4 w-4" />
+                          {customHoliday.date ? format(customHoliday.date, "PPP") : <span>Pick a date</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <CalendarComponent
+                          mode="single"
+                          selected={customHoliday.date}
+                          onSelect={(date) => setCustomHoliday(prev => ({ ...prev, date }))}
+                          initialFocus
+                          className={cn("p-3 pointer-events-auto")}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="holiday_description">Description (Optional)</Label>
+                    <Input
+                      id="holiday_description"
+                      value={customHoliday.description}
+                      onChange={(e) => setCustomHoliday(prev => ({ ...prev, description: e.target.value }))}
+                      placeholder="Special company celebration"
+                    />
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="recurring"
+                      checked={customHoliday.recurring}
+                      onChange={(e) => setCustomHoliday(prev => ({ ...prev, recurring: e.target.checked }))}
+                      className="rounded border-gray-300"
+                    />
+                    <Label htmlFor="recurring" className="text-sm">
+                      Recurring annually
+                    </Label>
+                  </div>
+                  
+                  <div className="flex justify-end space-x-2 pt-4">
+                    <Button variant="outline" onClick={() => setIsAddHolidayOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button 
+                      onClick={handleAddCustomHoliday}
+                      disabled={!customHoliday.name || !customHoliday.date}
+                    >
+                      Add Holiday
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {holidays.map((holiday) => (
+              <Card key={holiday.id} className="relative">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-medium">{holiday.name}</h3>
+                        <Badge variant={holiday.type === 'national' ? 'default' : 'secondary'} className="text-xs">
+                          {holiday.type === 'national' ? (holiday.country || 'National') : 'Custom'}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        {format(new Date(holiday.date), 'MMMM do, yyyy')}
+                      </p>
+                      {holiday.description && (
+                        <p className="text-xs text-muted-foreground">{holiday.description}</p>
+                      )}
+                      {holiday.recurring && (
+                        <p className="text-xs text-muted-foreground mt-1">🔄 Recurring annually</p>
+                      )}
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem
+                          onClick={() => handleDeleteHoliday(holiday)}
+                          className="text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete Holiday
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+            {holidays.length === 0 && (
+              <div className="col-span-full text-center py-8 text-muted-foreground">
+                No holidays configured. Add national holidays or create custom company holidays.
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

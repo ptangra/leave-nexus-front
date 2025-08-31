@@ -32,6 +32,16 @@ export interface LeaveRequest {
   requestedTo?: string; // Department head who should approve
 }
 
+export interface Holiday {
+  id: string;
+  name: string;
+  date: string;
+  type: 'national' | 'custom';
+  country?: string;
+  description?: string;
+  recurring?: boolean;
+}
+
 export interface Notification {
   id: string;
   type: 'request' | 'approval' | 'rejection' | 'message';
@@ -182,6 +192,71 @@ export const upcomingAbsences = [
     days: 6
   }
 ];
+
+// Sample holidays
+export const holidays: Holiday[] = [
+  {
+    id: '1',
+    name: 'New Year\'s Day',
+    date: '2024-01-01',
+    type: 'national',
+    country: 'US',
+    description: 'National holiday',
+    recurring: true
+  },
+  {
+    id: '2',
+    name: 'Christmas Day',
+    date: '2024-12-25',
+    type: 'national',
+    country: 'US',
+    description: 'National holiday',
+    recurring: true
+  },
+  {
+    id: '3',
+    name: 'Company Foundation Day',
+    date: '2024-06-15',
+    type: 'custom',
+    description: 'Company anniversary celebration',
+    recurring: true
+  }
+];
+
+// Countries with national holidays
+export const countries = [
+  { code: 'US', name: 'United States' },
+  { code: 'CA', name: 'Canada' },
+  { code: 'UK', name: 'United Kingdom' },
+  { code: 'DE', name: 'Germany' },
+  { code: 'FR', name: 'France' },
+  { code: 'AU', name: 'Australia' },
+  { code: 'JP', name: 'Japan' },
+  { code: 'ES', name: 'Spain' },
+  { code: 'IT', name: 'Italy' },
+  { code: 'NL', name: 'Netherlands' }
+];
+
+// National holidays by country (simplified example)
+export const nationalHolidays: Record<string, { name: string; date: string; description: string }[]> = {
+  US: [
+    { name: 'New Year\'s Day', date: '01-01', description: 'New Year celebration' },
+    { name: 'Independence Day', date: '07-04', description: 'Independence Day' },
+    { name: 'Thanksgiving', date: '11-28', description: 'Thanksgiving Day' },
+    { name: 'Christmas Day', date: '12-25', description: 'Christmas celebration' }
+  ],
+  CA: [
+    { name: 'New Year\'s Day', date: '01-01', description: 'New Year celebration' },
+    { name: 'Canada Day', date: '07-01', description: 'National Day of Canada' },
+    { name: 'Christmas Day', date: '12-25', description: 'Christmas celebration' }
+  ],
+  UK: [
+    { name: 'New Year\'s Day', date: '01-01', description: 'New Year celebration' },
+    { name: 'Easter Monday', date: '04-01', description: 'Easter Monday' },
+    { name: 'Christmas Day', date: '12-25', description: 'Christmas celebration' },
+    { name: 'Boxing Day', date: '12-26', description: 'Boxing Day' }
+  ]
+};
 
 // API simulation functions (replace with actual API calls)
 export const api = {
