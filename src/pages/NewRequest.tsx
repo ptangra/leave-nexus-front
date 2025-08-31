@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { api } from "@/lib/data";
+import { api, users, currentUser } from "@/lib/data";
 
 export default function NewRequest() {
   const navigate = useNavigate();
@@ -38,20 +38,30 @@ export default function NewRequest() {
     setIsSubmitting(true);
 
     try {
+      // Find the department head for the current user's department
+      const departmentHead = users.find(user => 
+        user.department === currentUser.department && 
+        user.isDepartmentHead === true
+      );
+
       // TODO: Replace with actual API call
       await api.submitLeaveRequest({
-        userId: '1', // currentUser.id
-        userName: 'Sarah Johnson', // currentUser.name
+        userId: currentUser.user_id.toString(),
+        userName: `${currentUser.name} ${currentUser.last_name}`,
         type: formData.type as any,
         startDate: formData.startDate,
         endDate: formData.endDate,
         days: days,
-        reason: formData.reason
+        reason: formData.reason,
+        department: currentUser.department,
+        requestedTo: departmentHead ? `${departmentHead.name} ${departmentHead.last_name}` : 'HR Department'
       });
 
       toast({
         title: "Request Submitted",
-        description: "Your leave request has been submitted for approval.",
+        description: departmentHead 
+          ? `Your leave request has been submitted to ${departmentHead.name} ${departmentHead.last_name} for approval.`
+          : "Your leave request has been submitted to HR for approval.",
       });
 
       navigate('/requests');

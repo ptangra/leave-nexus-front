@@ -12,6 +12,7 @@ export interface User {
   avatar?: string;
   totalLeave: number;
   usedLeave: number;
+  isDepartmentHead?: boolean;
 }
 
 export interface LeaveRequest {
@@ -27,6 +28,8 @@ export interface LeaveRequest {
   approvedBy?: string;
   approvedAt?: string;
   rejectionReason?: string;
+  department?: string;
+  requestedTo?: string; // Department head who should approve
 }
 
 export interface Notification {
@@ -66,7 +69,8 @@ export const users: User[] = [
     account_id: 1,
     avatar: 'MC',
     totalLeave: 25,
-    usedLeave: 8
+    usedLeave: 8,
+    isDepartmentHead: true
   },
   {
     user_id: 3,

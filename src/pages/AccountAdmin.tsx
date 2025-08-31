@@ -66,6 +66,7 @@ export default function AccountAdmin() {
     email: "",
     role: "USER" as User['role'],
     department: "",
+    isDepartmentHead: false,
   });
 
   // Filter users based on search and filters
@@ -103,6 +104,7 @@ export default function AccountAdmin() {
         email: "",
         role: "USER",
         department: "",
+        isDepartmentHead: false,
       });
     } catch (error) {
       toast({
@@ -320,6 +322,19 @@ export default function AccountAdmin() {
                 </Select>
               </div>
               
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="isDepartmentHead"
+                  checked={newUser.isDepartmentHead}
+                  onChange={(e) => setNewUser(prev => ({ ...prev, isDepartmentHead: e.target.checked }))}
+                  className="rounded border-gray-300"
+                />
+                <Label htmlFor="isDepartmentHead" className="text-sm">
+                  Department Head
+                </Label>
+              </div>
+              
               <div className="flex justify-end space-x-2 pt-4">
                 <Button variant="outline" onClick={() => setIsAddUserOpen(false)}>
                   Cancel
@@ -529,11 +544,18 @@ export default function AccountAdmin() {
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{user.department}</TableCell>
-                    <TableCell>
-                      <Badge variant={getRoleBadgeVariant(user.role)}>
-                        {getRoleLabel(user.role)}
-                      </Badge>
-                    </TableCell>
+                     <TableCell>
+                       <div className="flex flex-col gap-1">
+                         <Badge variant={getRoleBadgeVariant(user.role)}>
+                           {getRoleLabel(user.role)}
+                         </Badge>
+                         {user.isDepartmentHead && (
+                           <Badge variant="outline" className="text-xs">
+                             Dept. Head
+                           </Badge>
+                         )}
+                       </div>
+                     </TableCell>
                     <TableCell>
                       <div className="text-sm">
                         <div>{user.totalLeave - user.usedLeave} days available</div>
@@ -626,24 +648,37 @@ export default function AccountAdmin() {
                 />
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="edit_role">Role</Label>
-                <Select 
-                  value={editingUser.role} 
-                  onValueChange={(value: User['role']) => setEditingUser(prev => prev ? ({ ...prev, role: value }) : null)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="USER">User</SelectItem>
-                    <SelectItem value="ACCOUNT_ADMIN">Account Admin</SelectItem>
-                    {currentUser.role === 'ADMIN' && (
-                      <SelectItem value="ADMIN">System Admin</SelectItem>
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
+               <div className="space-y-2">
+                 <Label htmlFor="edit_role">Role</Label>
+                 <Select 
+                   value={editingUser.role} 
+                   onValueChange={(value: User['role']) => setEditingUser(prev => prev ? ({ ...prev, role: value }) : null)}
+                 >
+                   <SelectTrigger>
+                     <SelectValue placeholder="Select role" />
+                   </SelectTrigger>
+                   <SelectContent>
+                     <SelectItem value="USER">User</SelectItem>
+                     <SelectItem value="ACCOUNT_ADMIN">Account Admin</SelectItem>
+                     {currentUser.role === 'ADMIN' && (
+                       <SelectItem value="ADMIN">System Admin</SelectItem>
+                     )}
+                   </SelectContent>
+                 </Select>
+               </div>
+               
+               <div className="flex items-center space-x-2">
+                 <input
+                   type="checkbox"
+                   id="edit_isDepartmentHead"
+                   checked={editingUser.isDepartmentHead || false}
+                   onChange={(e) => setEditingUser(prev => prev ? ({ ...prev, isDepartmentHead: e.target.checked }) : null)}
+                   className="rounded border-gray-300"
+                 />
+                 <Label htmlFor="edit_isDepartmentHead" className="text-sm">
+                   Department Head
+                 </Label>
+               </div>
               
               <div className="flex justify-end space-x-2 pt-4">
                 <Button variant="outline" onClick={() => setIsEditUserOpen(false)}>
