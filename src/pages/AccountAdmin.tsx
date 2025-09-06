@@ -94,7 +94,6 @@ export default function AccountAdmin() {
     email: "",
     role: "USER" as User['role'],
     department: "",
-    isDepartmentHead: false,
   });
 
   // Filter users based on search and filters
@@ -132,7 +131,6 @@ export default function AccountAdmin() {
         email: "",
         role: "USER",
         department: "",
-        isDepartmentHead: false,
       });
     } catch (error) {
       toast({
@@ -442,18 +440,6 @@ export default function AccountAdmin() {
                 </Select>
               </div>
               
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="isDepartmentHead"
-                  checked={newUser.isDepartmentHead}
-                  onChange={(e) => setNewUser(prev => ({ ...prev, isDepartmentHead: e.target.checked }))}
-                  className="rounded border-gray-300"
-                />
-                <Label htmlFor="isDepartmentHead" className="text-sm">
-                  Department Head
-                </Label>
-              </div>
               
               <div className="flex justify-end space-x-2 pt-4">
                 <Button variant="outline" onClick={() => setIsAddUserOpen(false)}>
@@ -555,15 +541,68 @@ export default function AccountAdmin() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {departments.map((dept) => {
               const userCount = users.filter(user => user.department === dept).length;
+              const departmentHead = users.find(user => user.department === dept && user.isDepartmentHead);
+              const departmentUsers = users.filter(user => user.department === dept && !user.isDepartmentHead);
+              
               return (
                 <Card key={dept}>
                   <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
                         <h3 className="font-medium">{dept}</h3>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground mb-3">
                           {userCount} user{userCount !== 1 ? 's' : ''}
                         </p>
+                        
+                        <div className="space-y-2">
+                          <div>
+                            <Label className="text-xs font-medium text-muted-foreground">Department Head</Label>
+                            {departmentHead ? (
+                              <div className="flex items-center justify-between mt-1">
+                                <span className="text-sm">{departmentHead.name} {departmentHead.last_name}</span>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    // TODO: Remove department head status
+                                    console.log('Removing department head:', departmentHead);
+                                    toast({
+                                      title: "Department Head Removed",
+                                      description: `${departmentHead.name} ${departmentHead.last_name} is no longer the head of ${dept}.`,
+                                    });
+                                  }}
+                                  className="h-6 px-2 text-xs"
+                                >
+                                  Remove
+                                </Button>
+                              </div>
+                            ) : (
+                              <Select
+                                onValueChange={(userId) => {
+                                  const user = users.find(u => u.user_id.toString() === userId);
+                                  if (user) {
+                                    console.log('Setting department head:', user);
+                                    toast({
+                                      title: "Department Head Assigned",
+                                      description: `${user.name} ${user.last_name} is now the head of ${dept}.`,
+                                    });
+                                  }
+                                }}
+                              >
+                                <SelectTrigger className="h-8 text-xs">
+                                  <SelectValue placeholder="Select head" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {departmentUsers.map((user) => (
+                                    <SelectItem key={user.user_id} value={user.user_id.toString()}>
+                                      {user.name} {user.last_name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            )}
+                          </div>
+                        </div>
                       </div>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
