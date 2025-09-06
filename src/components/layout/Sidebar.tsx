@@ -13,6 +13,19 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { currentUser } from "@/lib/data";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarHeader,
+  SidebarFooter,
+  useSidebar,
+} from "@/components/ui/sidebar";
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: Home },
@@ -30,133 +43,150 @@ const superAdminNavigation = [
   { name: 'Super Admin', href: '/super-admin', icon: Shield },
 ];
 
-export function Sidebar() {
+export function AppSidebar() {
   const location = useLocation();
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
 
   const handleLogout = () => {
     // TODO: Implement actual logout
-    // api.logout();
     console.log('Logout clicked');
   };
 
+  const getNavClassName = (href: string) => {
+    const isActive = location.pathname === href;
+    return cn(
+      "flex items-center gap-3 text-sm font-medium transition-colors",
+      isActive
+        ? "bg-primary text-primary-foreground"
+        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+    );
+  };
+
+  const getSuperAdminClassName = (href: string) => {
+    const isActive = location.pathname === href;
+    return cn(
+      "flex items-center gap-3 text-sm font-medium transition-colors",
+      isActive
+        ? "bg-destructive text-destructive-foreground"
+        : "text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+    );
+  };
+
   return (
-    <div className="flex h-full w-64 flex-col bg-card border-r border-border">
-      {/* Logo/Brand */}
-      <div className="flex h-16 items-center px-6 border-b border-border">
-        <NavLink to="/" className="text-xl font-bold text-foreground hover:text-primary transition-colors">
-          VacationPro
-        </NavLink>
-      </div>
+    <Sidebar className="border-r border-border">
+      <SidebarHeader className="border-b border-border">
+        <div className="flex h-16 items-center px-6">
+          <NavLink to="/" className="text-xl font-bold text-foreground hover:text-primary transition-colors">
+            {isCollapsed ? "VP" : "VacationPro"}
+          </NavLink>
+        </div>
+        
+        {/* User info */}
+        <div className="p-4">
+          <NavLink to="/profile" className="flex items-center space-x-3 hover:bg-muted/50 rounded-lg p-2 transition-colors">
+            <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-medium">
+              {currentUser.avatar}
+            </div>
+            {!isCollapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-foreground truncate">
+                  {currentUser.name} {currentUser.last_name}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {currentUser.department}
+                </p>
+              </div>
+            )}
+          </NavLink>
+        </div>
+      </SidebarHeader>
 
-      {/* User info */}
-      <div className="p-4 border-b border-border">
-        <NavLink to="/profile" className="flex items-center space-x-3 hover:bg-muted/50 rounded-lg p-2 transition-colors">
-          <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-medium">
-            {currentUser.avatar}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-foreground truncate">
-              {currentUser.name} {currentUser.last_name}
-            </p>
-            <p className="text-xs text-muted-foreground truncate">
-              {currentUser.department}
-            </p>
-          </div>
-        </NavLink>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1">
-        {navigation.map((item) => {
-          const isActive = location.pathname === item.href;
-          return (
-            <NavLink
-              key={item.name}
-              to={item.href}
-              className={cn(
-                "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
-                isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              )}
-            >
-              <item.icon className="mr-3 h-5 w-5" />
-              {item.name}
-            </NavLink>
-          );
-        })}
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel className={isCollapsed ? "sr-only" : ""}>
+            Navigation
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {navigation.map((item) => (
+                <SidebarMenuItem key={item.name}>
+                  <SidebarMenuButton asChild>
+                    <NavLink to={item.href} className={getNavClassName(item.href)}>
+                      <item.icon className="h-5 w-5" />
+                      {!isCollapsed && <span>{item.name}</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
         {/* Admin section */}
         {(currentUser.role === 'ADMIN' || currentUser.role === 'ACCOUNT_ADMIN') && (
-          <>
-            <div className="pt-4 pb-2">
-              <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Administration
-              </h3>
-            </div>
-            {adminNavigation.map((item) => {
-              const isActive = location.pathname === item.href;
-              return (
-                <NavLink
-                  key={item.name}
-                  to={item.href}
-                  className={cn(
-                    "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  )}
-                >
-                  <item.icon className="mr-3 h-5 w-5" />
-                  {item.name}
-                </NavLink>
-              );
-            })}
-          </>
+          <SidebarGroup>
+            <SidebarGroupLabel className={isCollapsed ? "sr-only" : ""}>
+              Administration
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {adminNavigation.map((item) => (
+                  <SidebarMenuItem key={item.name}>
+                    <SidebarMenuButton asChild>
+                      <NavLink to={item.href} className={getNavClassName(item.href)}>
+                        <item.icon className="h-5 w-5" />
+                        {!isCollapsed && <span>{item.name}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
         )}
 
         {/* Super Admin section */}
         {currentUser.role === 'ADMIN' && (
-          <>
-            <div className="pt-4 pb-2">
-              <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                System
-              </h3>
-            </div>
-            {superAdminNavigation.map((item) => {
-              const isActive = location.pathname === item.href;
-              return (
-                <NavLink
-                  key={item.name}
-                  to={item.href}
-                  className={cn(
-                    "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
-                    isActive
-                      ? "bg-destructive text-destructive-foreground"
-                      : "text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                  )}
-                >
-                  <item.icon className="mr-3 h-5 w-5" />
-                  {item.name}
-                </NavLink>
-              );
-            })}
-          </>
+          <SidebarGroup>
+            <SidebarGroupLabel className={isCollapsed ? "sr-only" : ""}>
+              System
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {superAdminNavigation.map((item) => (
+                  <SidebarMenuItem key={item.name}>
+                    <SidebarMenuButton asChild>
+                      <NavLink to={item.href} className={getSuperAdminClassName(item.href)}>
+                        <item.icon className="h-5 w-5" />
+                        {!isCollapsed && <span>{item.name}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
         )}
-      </nav>
+      </SidebarContent>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-border">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleLogout}
-          className="w-full justify-start text-muted-foreground hover:text-foreground"
-        >
-          <LogOut className="mr-3 h-4 w-4" />
-          Sign out
-        </Button>
-      </div>
-    </div>
+      <SidebarFooter className="border-t border-border">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="w-full justify-start text-muted-foreground hover:text-foreground"
+              >
+                <LogOut className="h-4 w-4" />
+                {!isCollapsed && <span className="ml-3">Sign out</span>}
+              </Button>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
   );
 }
