@@ -77,7 +77,7 @@ export function AppSidebar() {
     <Sidebar 
       className="border-r border-border" 
       variant="sidebar"
-      collapsible="icon"
+      collapsible="offcanvas"
     >
       <SidebarHeader className="border-b border-border">
         <div className="flex h-16 items-center px-3 sm:px-6">
