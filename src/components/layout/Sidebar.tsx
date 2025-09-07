@@ -74,23 +74,27 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="border-r border-border">
+    <Sidebar 
+      className="border-r border-border" 
+      variant="sidebar"
+      collapsible="icon"
+    >
       <SidebarHeader className="border-b border-border">
-        <div className="flex h-16 items-center px-6">
-          <NavLink to="/" className="text-xl font-bold text-foreground hover:text-primary transition-colors">
+        <div className="flex h-16 items-center px-3 sm:px-6">
+          <NavLink to="/" className="text-lg sm:text-xl font-bold text-foreground hover:text-primary transition-colors">
             {isCollapsed ? "VP" : "VacationPro"}
           </NavLink>
         </div>
         
         {/* User info */}
-        <div className="p-4">
+        <div className="p-2 sm:p-4">
           <NavLink to="/profile" className="flex items-center space-x-3 hover:bg-muted/50 rounded-lg p-2 transition-colors">
-            <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-medium">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-medium text-sm">
               {currentUser.avatar}
             </div>
             {!isCollapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">
+                <p className="text-xs sm:text-sm font-medium text-foreground truncate">
                   {currentUser.name} {currentUser.last_name}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
@@ -112,10 +116,10 @@ export function AppSidebar() {
               {navigation.map((item) => (
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton asChild>
-                    <NavLink to={item.href} className={getNavClassName(item.href)}>
-                      <item.icon className="h-5 w-5" />
-                      {!isCollapsed && <span>{item.name}</span>}
-                    </NavLink>
+                     <NavLink to={item.href} className={getNavClassName(item.href)}>
+                       <item.icon className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                       {!isCollapsed && <span className="text-xs sm:text-sm">{item.name}</span>}
+                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -134,10 +138,10 @@ export function AppSidebar() {
                 {adminNavigation.map((item) => (
                   <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton asChild>
-                      <NavLink to={item.href} className={getNavClassName(item.href)}>
-                        <item.icon className="h-5 w-5" />
-                        {!isCollapsed && <span>{item.name}</span>}
-                      </NavLink>
+                       <NavLink to={item.href} className={getNavClassName(item.href)}>
+                         <item.icon className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                         {!isCollapsed && <span className="text-xs sm:text-sm">{item.name}</span>}
+                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -157,10 +161,10 @@ export function AppSidebar() {
                 {superAdminNavigation.map((item) => (
                   <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton asChild>
-                      <NavLink to={item.href} className={getSuperAdminClassName(item.href)}>
-                        <item.icon className="h-5 w-5" />
-                        {!isCollapsed && <span>{item.name}</span>}
-                      </NavLink>
+                       <NavLink to={item.href} className={getSuperAdminClassName(item.href)}>
+                         <item.icon className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                         {!isCollapsed && <span className="text-xs sm:text-sm">{item.name}</span>}
+                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -174,15 +178,15 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleLogout}
-                className="w-full justify-start text-muted-foreground hover:text-foreground"
-              >
-                <LogOut className="h-4 w-4" />
-                {!isCollapsed && <span className="ml-3">Sign out</span>}
-              </Button>
+               <Button
+                 variant="ghost"
+                 size="sm"
+                 onClick={handleLogout}
+                 className="w-full justify-start text-muted-foreground hover:text-foreground"
+               >
+                 <LogOut className="h-4 w-4 flex-shrink-0" />
+                 {!isCollapsed && <span className="ml-2 sm:ml-3 text-xs sm:text-sm">Sign out</span>}
+               </Button>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

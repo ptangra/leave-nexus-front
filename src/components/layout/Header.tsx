@@ -15,16 +15,16 @@ export function Header() {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <header className="h-16 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-full items-center justify-between px-6">
+    <header className="h-14 sm:h-16 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="flex h-full items-center justify-between px-3 sm:px-6">
         {/* Left side - Sidebar trigger and search */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4 flex-1">
           <SidebarTrigger />
-          <div className="relative w-96">
+          <div className="relative flex-1 max-w-sm sm:max-w-md lg:max-w-96">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search requests, users, or dates..."
-              className="pl-10"
+              placeholder="Search..."
+              className="pl-10 text-sm"
             />
           </div>
         </div>
