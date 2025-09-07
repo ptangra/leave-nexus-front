@@ -393,51 +393,69 @@ export default function SuperAdmin() {
                 </div>
               </div>
 
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Company Name</TableHead>
-                    <TableHead>Users Count</TableHead>
-                    <TableHead>Subscription</TableHead>
-                    <TableHead>Billing Address</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-16 sm:w-20">ID</TableHead>
+                      <TableHead className="min-w-[120px] sm:min-w-[150px]">Company Name</TableHead>
+                      <TableHead className="hidden sm:table-cell w-24">Users Count</TableHead>
+                      <TableHead className="w-24 sm:w-32">Subscription</TableHead>
+                      <TableHead className="hidden md:table-cell min-w-[200px]">Billing Address</TableHead>
+                      <TableHead className="w-20 sm:w-24">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
                 <TableBody>
                   {mockAccounts.map((account) => (
                     <TableRow key={account.id}>
-                      <TableCell>{account.id}</TableCell>
-                      <TableCell className="font-medium">{account.companyName}</TableCell>
-                      <TableCell>{account.usersCount}</TableCell>
+                      <TableCell className="font-mono text-xs">{account.id}</TableCell>
+                      <TableCell className="font-medium">
+                        <div className="min-w-0">
+                          <div className="truncate">{account.companyName}</div>
+                          <div className="sm:hidden text-xs text-muted-foreground mt-1">
+                            {account.usersCount} users
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell">{account.usersCount}</TableCell>
                       <TableCell>
-                        <Badge variant={account.subscriptionType === 'PAID' ? 'default' : 'secondary'}>
+                        <Badge 
+                          variant={account.subscriptionType === 'PAID' ? 'default' : 'secondary'}
+                          className="text-xs"
+                        >
                           {account.subscriptionType}
                         </Badge>
                       </TableCell>
-                      <TableCell className="max-w-xs truncate">{account.billingAddress}</TableCell>
+                      <TableCell className="hidden md:table-cell max-w-xs truncate text-sm">
+                        {account.billingAddress}
+                      </TableCell>
                       <TableCell>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-1">
                           <Button 
                             variant="outline" 
                             size="sm"
                             onClick={() => handleAccountAction('edit', account.id)}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:p-2"
                           >
-                            <Edit className="h-4 w-4" />
+                            <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline ml-1 sm:ml-2">Edit</span>
                           </Button>
                           <Button 
                             variant="destructive" 
                             size="sm"
                             onClick={() => handleAccountAction('delete', account.id)}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:p-2"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline ml-1 sm:ml-2">Delete</span>
                           </Button>
                         </div>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
+                </Table>
+              </div>
             </TabsContent>
 
             {/* Users Management */}
@@ -473,53 +491,75 @@ export default function SuperAdmin() {
                 </div>
               </div>
 
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Account ID</TableHead>
-                    <TableHead>Department</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-16 sm:w-20">ID</TableHead>
+                      <TableHead className="min-w-[120px] sm:min-w-[150px]">Name</TableHead>
+                      <TableHead className="hidden md:table-cell min-w-[200px]">Email</TableHead>
+                      <TableHead className="w-20 sm:w-24">Role</TableHead>
+                      <TableHead className="hidden sm:table-cell w-24">Account ID</TableHead>
+                      <TableHead className="hidden lg:table-cell w-32">Department</TableHead>
+                      <TableHead className="w-20 sm:w-24">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
                 <TableBody>
                   {allUsers.map((user) => (
                     <TableRow key={user.id}>
-                      <TableCell>{user.id}</TableCell>
-                      <TableCell className="font-medium">{user.firstName} {user.lastName}</TableCell>
-                      <TableCell>{user.email}</TableCell>
+                      <TableCell className="font-mono text-xs">{user.id}</TableCell>
+                      <TableCell className="font-medium">
+                        <div className="min-w-0">
+                          <div className="truncate">{user.firstName} {user.lastName}</div>
+                          <div className="md:hidden text-xs text-muted-foreground mt-1 truncate">
+                            {user.email}
+                          </div>
+                          <div className="sm:hidden text-xs text-muted-foreground mt-1">
+                            Account: {user.accountId}
+                          </div>
+                          <div className="lg:hidden text-xs text-muted-foreground mt-1">
+                            {user.department}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell text-sm truncate max-w-[200px]">{user.email}</TableCell>
                       <TableCell>
-                        <Badge variant={user.userRole === 'ADMIN' ? 'destructive' : user.userRole === 'ACCOUNT_ADMIN' ? 'default' : 'secondary'}>
-                          {user.userRole}
+                        <Badge 
+                          variant={user.userRole === 'ADMIN' ? 'destructive' : user.userRole === 'ACCOUNT_ADMIN' ? 'default' : 'secondary'}
+                          className="text-xs"
+                        >
+                          {user.userRole.replace('_', ' ')}
                         </Badge>
                       </TableCell>
-                      <TableCell>{user.accountId}</TableCell>
-                      <TableCell>{user.department}</TableCell>
+                      <TableCell className="hidden sm:table-cell">{user.accountId}</TableCell>
+                      <TableCell className="hidden lg:table-cell">{user.department}</TableCell>
                       <TableCell>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-1">
                           <Button 
                             variant="outline" 
                             size="sm"
                             onClick={() => handleUserAction('edit', parseInt(user.id))}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:p-2"
                           >
-                            <Edit className="h-4 w-4" />
+                            <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline ml-1 sm:ml-2">Edit</span>
                           </Button>
                           <Button 
                             variant="destructive" 
                             size="sm"
                             onClick={() => handleUserAction('delete', parseInt(user.id))}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:p-2"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline ml-1 sm:ml-2">Delete</span>
                           </Button>
                         </div>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
+                </Table>
+              </div>
             </TabsContent>
 
             {/* Departments Management */}
@@ -588,45 +628,61 @@ export default function SuperAdmin() {
                 </div>
               </div>
 
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Department Name</TableHead>
-                    <TableHead>Account</TableHead>
-                    <TableHead>Company</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {allDepartments.map((dept) => (
-                    <TableRow key={dept.id}>
-                      <TableCell>{dept.id}</TableCell>
-                      <TableCell className="font-medium">{dept.departmentName}</TableCell>
-                      <TableCell>{dept.accountId}</TableCell>
-                      <TableCell>{dept.companyName}</TableCell>
-                      <TableCell>
-                          <div className="flex items-center space-x-2">
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              onClick={() => handleDepartmentAction('edit', dept.id)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button 
-                              variant="destructive" 
-                              size="sm"
-                              onClick={() => handleDepartmentAction('delete', dept.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                      </TableCell>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-16 sm:w-20">ID</TableHead>
+                      <TableHead className="min-w-[120px] sm:min-w-[150px]">Department Name</TableHead>
+                      <TableHead className="hidden sm:table-cell w-24">Account</TableHead>
+                      <TableHead className="hidden md:table-cell min-w-[120px]">Company</TableHead>
+                      <TableHead className="w-20 sm:w-24">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {allDepartments.map((dept) => (
+                      <TableRow key={dept.id}>
+                        <TableCell className="font-mono text-xs">{dept.id}</TableCell>
+                        <TableCell className="font-medium">
+                          <div className="min-w-0">
+                            <div className="truncate">{dept.departmentName}</div>
+                            <div className="sm:hidden text-xs text-muted-foreground mt-1">
+                              Account: {dept.accountId}
+                            </div>
+                            <div className="md:hidden text-xs text-muted-foreground mt-1 truncate">
+                              {dept.companyName}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">{dept.accountId}</TableCell>
+                        <TableCell className="hidden md:table-cell truncate max-w-[120px]">{dept.companyName}</TableCell>
+                        <TableCell>
+                            <div className="flex items-center space-x-1">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => handleDepartmentAction('edit', dept.id)}
+                                className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:p-2"
+                              >
+                                <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+                                <span className="hidden sm:inline ml-1 sm:ml-2">Edit</span>
+                              </Button>
+                              <Button 
+                                variant="destructive" 
+                                size="sm"
+                                onClick={() => handleDepartmentAction('delete', dept.id)}
+                                className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:p-2"
+                              >
+                                <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                                <span className="hidden sm:inline ml-1 sm:ml-2">Delete</span>
+                              </Button>
+                            </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </TabsContent>
 
             {/* Master/Slave Relationships */}
@@ -683,41 +739,47 @@ export default function SuperAdmin() {
                 </div>
               </div>
 
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Leave Type Name</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-16 sm:w-20">ID</TableHead>
+                      <TableHead className="min-w-[150px] sm:min-w-[200px]">Leave Type Name</TableHead>
+                      <TableHead className="w-24 sm:w-32">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
                 <TableBody>
                   {mockLeaveTypes.map((leaveType) => (
                     <TableRow key={leaveType.id}>
-                      <TableCell>{leaveType.id}</TableCell>
+                      <TableCell className="font-mono text-xs">{leaveType.id}</TableCell>
                       <TableCell className="font-medium">{leaveType.name}</TableCell>
                       <TableCell>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-1">
                           <Button 
                             variant="outline" 
                             size="sm"
                             onClick={() => handleLeaveTypeAction('edit', leaveType.id)}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:p-2"
                           >
-                            <Edit className="h-4 w-4" />
+                            <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline ml-1 sm:ml-2">Edit</span>
                           </Button>
                           <Button 
                             variant="destructive" 
                             size="sm"
                             onClick={() => handleLeaveTypeAction('delete', leaveType.id)}
+                            className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:p-2"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline ml-1 sm:ml-2">Delete</span>
                           </Button>
                         </div>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
+                </Table>
+              </div>
               {/* TODO: Add your API call here: await fetch('/api/leave-types') */}
             </TabsContent>
 
@@ -831,55 +893,70 @@ export default function SuperAdmin() {
                 </div>
               </div>
 
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>User</TableHead>
-                    <TableHead>Leave Type</TableHead>
-                    <TableHead>Available</TableHead>
-                    <TableHead>Planned</TableHead>
-                    <TableHead>Taken</TableHead>
-                    <TableHead>Upcoming</TableHead>
-                    <TableHead>Next Year Planned</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-16 sm:w-20">ID</TableHead>
+                      <TableHead className="min-w-[100px] sm:min-w-[120px]">User</TableHead>
+                      <TableHead className="hidden sm:table-cell min-w-[100px]">Leave Type</TableHead>
+                      <TableHead className="w-20">Available</TableHead>
+                      <TableHead className="hidden md:table-cell w-20">Planned</TableHead>
+                      <TableHead className="w-16">Taken</TableHead>
+                      <TableHead className="hidden lg:table-cell w-20">Upcoming</TableHead>
+                      <TableHead className="hidden lg:table-cell w-20">Next Year</TableHead>
+                      <TableHead className="w-20 sm:w-24">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
                 <TableBody>
                   {mockLeaveDays.map((leaveDays) => {
                     const user = allUsers.find(u => u.id === leaveDays.userId);
                     const leaveType = mockLeaveTypes.find(lt => lt.id === leaveDays.leaveTypeId);
                     return (
                       <TableRow key={leaveDays.id}>
-                        <TableCell>{leaveDays.id}</TableCell>
+                        <TableCell className="font-mono text-xs">{leaveDays.id}</TableCell>
                         <TableCell className="font-medium">
-                          {user ? `${user.firstName} ${user.lastName}` : `User ${leaveDays.userId}`}
+                          <div className="min-w-0">
+                            <div className="truncate">
+                              {user ? `${user.firstName} ${user.lastName}` : `User ${leaveDays.userId}`}
+                            </div>
+                            <div className="sm:hidden text-xs text-muted-foreground mt-1">
+                              {leaveType ? leaveType.name : `Type ${leaveDays.leaveTypeId}`}
+                            </div>
+                            <div className="md:hidden text-xs text-muted-foreground mt-1">
+                              Planned: {leaveDays.planned}
+                            </div>
+                          </div>
                         </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">
+                        <TableCell className="hidden sm:table-cell">
+                          <Badge variant="outline" className="text-xs">
                             {leaveType ? leaveType.name : `Type ${leaveDays.leaveTypeId}`}
                           </Badge>
                         </TableCell>
-                        <TableCell>{leaveDays.available}</TableCell>
-                        <TableCell>{leaveDays.planned}</TableCell>
-                        <TableCell>{leaveDays.taken}</TableCell>
-                        <TableCell>{leaveDays.upcoming}</TableCell>
-                        <TableCell>{leaveDays.nextYearPlanned}</TableCell>
+                        <TableCell className="text-center font-medium">{leaveDays.available}</TableCell>
+                        <TableCell className="hidden md:table-cell text-center">{leaveDays.planned}</TableCell>
+                        <TableCell className="text-center font-medium">{leaveDays.taken}</TableCell>
+                        <TableCell className="hidden lg:table-cell text-center">{leaveDays.upcoming}</TableCell>
+                        <TableCell className="hidden lg:table-cell text-center">{leaveDays.nextYearPlanned}</TableCell>
                         <TableCell>
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center space-x-1">
                             <Button 
                               variant="outline" 
                               size="sm"
                               onClick={() => handleLeaveDaysAction('edit', leaveDays.id)}
+                              className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:p-2"
                             >
-                              <Edit className="h-4 w-4" />
+                              <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+                              <span className="hidden sm:inline ml-1 sm:ml-2">Edit</span>
                             </Button>
                             <Button 
                               variant="destructive" 
                               size="sm"
                               onClick={() => handleLeaveDaysAction('delete', leaveDays.id)}
+                              className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:p-2"
                             >
-                              <Trash2 className="h-4 w-4" />
+                              <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                              <span className="hidden sm:inline ml-1 sm:ml-2">Delete</span>
                             </Button>
                           </div>
                         </TableCell>
@@ -887,7 +964,8 @@ export default function SuperAdmin() {
                     );
                   })}
                 </TableBody>
-              </Table>
+                </Table>
+              </div>
               {/* TODO: Add your API call here: await fetch('/api/leave-days') */}
             </TabsContent>
 
