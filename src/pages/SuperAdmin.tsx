@@ -396,12 +396,12 @@ export default function SuperAdmin() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Company Name</TableHead>
-                    <TableHead>Users Count</TableHead>
-                    <TableHead>Subscription</TableHead>
-                    <TableHead>Billing Address</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead className="min-w-fit">ID</TableHead>
+                    <TableHead className="min-w-fit">Company Name</TableHead>
+                    <TableHead className="min-w-fit">Users Count</TableHead>
+                    <TableHead className="min-w-fit">Subscription</TableHead>
+                    <TableHead className="min-w-fit">Billing Address</TableHead>
+                    <TableHead className="min-w-fit">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -476,13 +476,13 @@ export default function SuperAdmin() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Account ID</TableHead>
-                    <TableHead>Department</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead className="min-w-fit">ID</TableHead>
+                    <TableHead className="min-w-fit">Name</TableHead>
+                    <TableHead className="min-w-fit">Email</TableHead>
+                    <TableHead className="min-w-fit">Role</TableHead>
+                    <TableHead className="min-w-fit">Account ID</TableHead>
+                    <TableHead className="min-w-fit">Department</TableHead>
+                    <TableHead className="min-w-fit">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -591,11 +591,11 @@ export default function SuperAdmin() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Department Name</TableHead>
-                    <TableHead>Account</TableHead>
-                    <TableHead>Company</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead className="min-w-fit">ID</TableHead>
+                    <TableHead className="min-w-fit">Department Name</TableHead>
+                    <TableHead className="min-w-fit">Account</TableHead>
+                    <TableHead className="min-w-fit">Company</TableHead>
+                    <TableHead className="min-w-fit">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -686,9 +686,9 @@ export default function SuperAdmin() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Leave Type Name</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead className="min-w-fit">ID</TableHead>
+                    <TableHead className="min-w-fit">Leave Type Name</TableHead>
+                    <TableHead className="min-w-fit">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -834,15 +834,15 @@ export default function SuperAdmin() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>User</TableHead>
-                    <TableHead>Leave Type</TableHead>
-                    <TableHead>Available</TableHead>
-                    <TableHead>Planned</TableHead>
-                    <TableHead>Taken</TableHead>
-                    <TableHead>Upcoming</TableHead>
-                    <TableHead>Next Year Planned</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead className="min-w-fit">ID</TableHead>
+                    <TableHead className="min-w-fit">User</TableHead>
+                    <TableHead className="min-w-fit">Leave Type</TableHead>
+                    <TableHead className="min-w-fit">Available</TableHead>
+                    <TableHead className="min-w-fit">Planned</TableHead>
+                    <TableHead className="min-w-fit">Taken</TableHead>
+                    <TableHead className="min-w-fit">Upcoming</TableHead>
+                    <TableHead className="min-w-fit">Next Year Planned</TableHead>
+                    <TableHead className="min-w-fit">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -903,10 +903,10 @@ export default function SuperAdmin() {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Type</TableHead>
-                          <TableHead>Requested By</TableHead>
-                          <TableHead>Date Range</TableHead>
-                          <TableHead>Status</TableHead>
+                          <TableHead className="min-w-fit">Type</TableHead>
+                          <TableHead className="min-w-fit">Requested By</TableHead>
+                          <TableHead className="min-w-fit">Date Range</TableHead>
+                          <TableHead className="min-w-fit">Status</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -959,11 +959,11 @@ export default function SuperAdmin() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>User</TableHead>
-                    <TableHead>Message</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead className="min-w-fit">User</TableHead>
+                    <TableHead className="min-w-fit">Message</TableHead>
+                    <TableHead className="min-w-fit">Type</TableHead>
+                    <TableHead className="min-w-fit">Date</TableHead>
+                    <TableHead className="min-w-fit">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
