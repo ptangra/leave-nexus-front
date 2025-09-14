@@ -318,40 +318,40 @@ export default function SuperAdmin() {
         </CardHeader>
         <CardContent>
           <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-9">
-              <TabsTrigger value="accounts">Accounts</TabsTrigger>
-              <TabsTrigger value="users">Users</TabsTrigger>
-              <TabsTrigger value="departments">Departments</TabsTrigger>
-              <TabsTrigger value="relationships">Master/Slave</TabsTrigger>
-              <TabsTrigger value="leave-types">Leave Types</TabsTrigger>
-              <TabsTrigger value="leave-days">Leave Days</TabsTrigger>
-              <TabsTrigger value="requests">Requests</TabsTrigger>
-              <TabsTrigger value="notifications">Notifications</TabsTrigger>
-              <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-9 gap-1">
+              <TabsTrigger value="accounts" className="text-xs sm:text-sm">Accounts</TabsTrigger>
+              <TabsTrigger value="users" className="text-xs sm:text-sm">Users</TabsTrigger>
+              <TabsTrigger value="departments" className="text-xs sm:text-sm">Departments</TabsTrigger>
+              <TabsTrigger value="relationships" className="text-xs sm:text-sm">Master/Slave</TabsTrigger>
+              <TabsTrigger value="leave-types" className="text-xs sm:text-sm">Leave Types</TabsTrigger>
+              <TabsTrigger value="leave-days" className="text-xs sm:text-sm">Leave Days</TabsTrigger>
+              <TabsTrigger value="requests" className="text-xs sm:text-sm">Requests</TabsTrigger>
+              <TabsTrigger value="notifications" className="text-xs sm:text-sm">Notifications</TabsTrigger>
+              <TabsTrigger value="analytics" className="text-xs sm:text-sm">Analytics</TabsTrigger>
             </TabsList>
 
             {/* Accounts Management */}
             <TabsContent value="accounts" className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+                <div className="flex items-center space-x-2 flex-1 sm:flex-initial">
                   <Search className="h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search accounts..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-64"
+                    className="w-full sm:w-64"
                   />
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Button onClick={() => exportData('accounts')} variant="outline" size="sm">
-                    <Download className="h-4 w-4 mr-2" />
-                    Export
+                <div className="flex items-center space-x-2 flex-shrink-0">
+                  <Button onClick={() => exportData('accounts')} variant="outline" size="sm" className="flex-1 sm:flex-initial">
+                    <Download className="h-4 w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Export</span>
                   </Button>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button size="sm">
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Account
+                      <Button size="sm" className="flex-1 sm:flex-initial">
+                        <Plus className="h-4 w-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Add Account</span>
                       </Button>
                     </DialogTrigger>
                     <DialogContent>
