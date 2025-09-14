@@ -332,24 +332,24 @@ export default function SuperAdmin() {
 
             {/* Accounts Management */}
             <TabsContent value="accounts" className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div className="flex items-center space-x-2">
                   <Search className="h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search accounts..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-64"
+                    className="w-full lg:w-64"
                   />
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Button onClick={() => exportData('accounts')} variant="outline" size="sm">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <Button onClick={() => exportData('accounts')} variant="outline" size="sm" className="w-full sm:w-auto">
                     <Download className="h-4 w-4 mr-2" />
                     Export
                   </Button>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button size="sm">
+                      <Button size="sm" className="w-full sm:w-auto">
                         <Plus className="h-4 w-4 mr-2" />
                         Add Account
                       </Button>
@@ -442,15 +442,17 @@ export default function SuperAdmin() {
 
             {/* Users Management */}
             <TabsContent value="users" className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Search className="h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search users..."
-                    className="w-64"
-                  />
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <div className="flex items-center space-x-2">
+                    <Search className="h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search users..."
+                      className="w-full sm:w-64"
+                    />
+                  </div>
                   <Select>
-                    <SelectTrigger className="w-32">
+                    <SelectTrigger className="w-full sm:w-32">
                       <SelectValue placeholder="Role" />
                     </SelectTrigger>
                     <SelectContent>
@@ -461,12 +463,12 @@ export default function SuperAdmin() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Button onClick={() => exportData('users')} variant="outline" size="sm">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <Button onClick={() => exportData('users')} variant="outline" size="sm" className="w-full sm:w-auto">
                     <Download className="h-4 w-4 mr-2" />
                     Export
                   </Button>
-                  <Button size="sm" onClick={() => handleUserAction('create')}>
+                  <Button size="sm" onClick={() => handleUserAction('create')} className="w-full sm:w-auto">
                     <Plus className="h-4 w-4 mr-2" />
                     Add User
                   </Button>
@@ -524,12 +526,14 @@ export default function SuperAdmin() {
 
             {/* Departments Management */}
             <TabsContent value="departments" className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Search className="h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Search departments..." className="w-64" />
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <div className="flex items-center space-x-2">
+                    <Search className="h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Search departments..." className="w-full sm:w-64" />
+                  </div>
                   <Select>
-                    <SelectTrigger className="w-48">
+                    <SelectTrigger className="w-full sm:w-48">
                       <SelectValue placeholder="Filter by Account" />
                     </SelectTrigger>
                     <SelectContent>
@@ -542,14 +546,14 @@ export default function SuperAdmin() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Button onClick={() => exportData('departments')} variant="outline" size="sm">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <Button onClick={() => exportData('departments')} variant="outline" size="sm" className="w-full sm:w-auto">
                     <Download className="h-4 w-4 mr-2" />
                     Export
                   </Button>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button size="sm">
+                      <Button size="sm" className="w-full sm:w-auto">
                         <Plus className="h-4 w-4 mr-2" />
                         Add Department
                       </Button>
@@ -647,19 +651,19 @@ export default function SuperAdmin() {
 
             {/* Leave Types Management */}
             <TabsContent value="leave-types" className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div className="flex items-center space-x-2">
                   <Search className="h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Search leave types..." className="w-64" />
+                  <Input placeholder="Search leave types..." className="w-full lg:w-64" />
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Button onClick={() => exportData('leave-types')} variant="outline" size="sm">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <Button onClick={() => exportData('leave-types')} variant="outline" size="sm" className="w-full sm:w-auto">
                     <Download className="h-4 w-4 mr-2" />
                     Export
                   </Button>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button size="sm">
+                      <Button size="sm" className="w-full sm:w-auto">
                         <Plus className="h-4 w-4 mr-2" />
                         Add Leave Type
                       </Button>
@@ -723,12 +727,14 @@ export default function SuperAdmin() {
 
             {/* Leave Days Management */}
             <TabsContent value="leave-days" className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Search className="h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Search leave days..." className="w-64" />
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <div className="flex items-center space-x-2">
+                    <Search className="h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Search leave days..." className="w-full sm:w-64" />
+                  </div>
                   <Select>
-                    <SelectTrigger className="w-48">
+                    <SelectTrigger className="w-full sm:w-48">
                       <SelectValue placeholder="Filter by User" />
                     </SelectTrigger>
                     <SelectContent>
@@ -741,7 +747,7 @@ export default function SuperAdmin() {
                     </SelectContent>
                   </Select>
                   <Select>
-                    <SelectTrigger className="w-48">
+                    <SelectTrigger className="w-full sm:w-48">
                       <SelectValue placeholder="Filter by Leave Type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -754,14 +760,14 @@ export default function SuperAdmin() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Button onClick={() => exportData('leave-days')} variant="outline" size="sm">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <Button onClick={() => exportData('leave-days')} variant="outline" size="sm" className="w-full sm:w-auto">
                     <Download className="h-4 w-4 mr-2" />
                     Export
                   </Button>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button size="sm">
+                      <Button size="sm" className="w-full sm:w-auto">
                         <Plus className="h-4 w-4 mr-2" />
                         Add Leave Days
                       </Button>
@@ -948,9 +954,9 @@ export default function SuperAdmin() {
 
             {/* Notifications Management */}
             <TabsContent value="notifications" className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <h3 className="text-lg font-semibold">System Notifications</h3>
-                <Button size="sm">
+                <Button size="sm" className="w-full sm:w-auto">
                   <Plus className="h-4 w-4 mr-2" />
                   Send Notification
                 </Button>
